@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Recharge Plans - Fast, Secure & Simple</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --jio-blue: #0f3cc9;
+        --jio-blue-dark: #0a2a8c;
+        --airtel-red: #ea0000;
+        --vi-red: #c80000;
+        --bsnl-blue: #004c97;
+        --purple-theme: #5f259f;
+        --purple-dark: #3a0070;
+        --bg-color: #f2f4f7;
+        --text-dark: #1c1c1c;
+        --text-muted: #666666;
+        --success: #118a27;
+        --danger: #d93025;
+        --gold: #ffcc00;
+        --orange: #ff7700;
+        --border-color: #e2e4e9;
+        --pay-header: #243575;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body { background-color: #000; display: flex; justify-content: center; min-height: 100vh; overflow: hidden; }
+
+    #app {
+        width: 100%;
+        max-width: 480px;
+        background-color: var(--bg-color);
+        position: relative;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* --- SCREENS --- */
+    .app-screen {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: var(--bg-color);
+        display: none;
+        flex-direction: column;
+        overflow-y: auto;
+        z-index: 10;
+    }
+    .app-screen.active { display: flex; }
+
+    /* --- 1. JIO 10 YEARS SPLASH SCREEN --- */
+    #screen-splash {
+        background: #ffffff;
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .splash-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        animation: logoPulse 1.5s infinite alternate ease-in-out;
+    }
+    @keyframes logoPulse {
+        0% { transform: scale(0.95); }
+        100% { transform: scale(1.03); }
+    }
+    .dots-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+    }
+    .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        animation: dotGlow 1.2s infinite ease-in-out alternate;
+    }
+    @keyframes dotGlow {
+        0% { opacity: 0.3; transform: scale(0.8); }
+        100% { opacity: 1; transform: scale(1.2); }
+    }
+    .dot-blue { background-color: #0f3cc9; }
+    .dot-red { background-color: #ea0000; }
+    .dot-gold { background-color: #ffaa00; }
+
+    .jio-10-logo {
+        display: flex;
+        align-items: center;
+    }
+    .jio-1 {
+        font-size: 85px;
+        font-weight: 900;
+        color: #0f3cc9;
+        line-height: 1;
+        margin-right: -8px;
+    }
+    .jio-circle {
+        width: 70px;
+        height: 70px;
+        background: #0f3cc9;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 28px;
+        font-weight: 900;
+        letter-spacing: -1px;
+        box-shadow: 0 4px 15px rgba(15, 60, 201, 0.4);
+    }
+    .splash-footer {
+        position: absolute;
+        bottom: 30px;
+        font-size: 12px;
+        color: #888;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+    /* --- HEADERS --- */
+    .top-header {
+        background: var(--purple-theme);
+        color: #fff;
+        padding: 14px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .header-icon svg { width: 24px; height: 24px; fill: #fff; cursor: pointer; }
+    .header-title h1 { font-size: 18px; font-weight: 700; }
+    .header-title p { font-size: 11px; color: #d6bdf5; margin-top: 1px; }
+    .header-right { display: flex; align-items: center; gap: 16px; }
+    .header-right svg { width: 22px; height: 22px; fill: #fff; cursor: pointer; }
+
+    /* --- DIWALI BANNER --- */
+    .diwali-banner {
+        background: radial-gradient(circle at top right, #450c77 0%, #17002e 100%);
+        color: #fff;
+        text-align: center;
+        padding: 22px 14px 18px;
+        border-bottom: 2px solid var(--gold);
+        position: relative;
+    }
+    .savings-ribbon {
+        background: linear-gradient(90deg, #ff0077, #7700ff);
+        display: inline-block;
+        padding: 5px 22px;
+        border-radius: 20px;
+        font-weight: 900;
+        font-size: 12px;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        border: 1px solid rgba(255,255,255,0.4);
+    }
+    .dhamaka-title {
+        font-size: 26px;
+        font-weight: 900;
+        font-style: italic;
+        background: linear-gradient(to right, #ffcc00, #ff6600);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 4px;
+        text-shadow: 0 2px 10px rgba(255, 204, 0, 0.3);
+    }
+    .banner-subtitle { font-size: 11px; color: #e4d7f5; letter-spacing: 0.5px; }
+
+    /* Trust Grid */
+    .trust-badges-row {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 5px;
+        margin-top: 14px;
+        background: rgba(255,255,255,0.06);
+        padding: 10px 4px;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.12);
+    }
+    .trust-badge-col { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .trust-icon-wrap {
+        width: 32px;
+        height: 32px;
+        background: rgba(255,255,255,0.12);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 4px;
+    }
+    .trust-icon-wrap svg { width: 17px; height: 17px; fill: #fff; }
+    .trust-badge-col span { font-size: 7.5px; font-weight: 700; color: #fff; line-height: 1.1; }
+
+    /* --- DASHBOARD FORM --- */
+    .card {
+        background: #fff;
+        margin: 15px;
+        padding: 18px;
+        border-radius: 14px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid var(--border-color);
+    }
+    .field-label { font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
+    .mobile-box {
+        display: flex;
+        align-items: center;
+        border-bottom: 2px solid var(--purple-theme);
+        padding-bottom: 8px;
+    }
+    .mobile-box span { font-size: 18px; font-weight: 700; color: #333; margin-right: 10px; }
+    .mobile-box input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 19px;
+        font-weight: 700;
+        color: var(--text-dark);
+        letter-spacing: 1px;
+    }
+    .mobile-box input::placeholder { color: #aaa; font-weight: 400; letter-spacing: normal; font-size: 16px;}
+    .input-hint { font-size: 11px; color: var(--danger); margin-top: 6px; display: none; }
+
+    .op-selection-title { font-size: 12px; font-weight: 700; color: var(--text-muted); margin: 20px 0 10px; }
+    .operator-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .op-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 4px;
+        border: 1.5px solid var(--border-color);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+        background: #fff;
+    }
+    .op-card.disabled { opacity: 0.45; pointer-events: none; }
+    .op-card.active { border-color: var(--purple-theme); background: #f6f0ff; transform: scale(1.04); }
+    .op-circle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 900;
+        color: white;
+    }
+    .circle-jio { background: var(--jio-blue); }
+    .circle-airtel { background: var(--airtel-red); }
+    .circle-vi { background: var(--vi-red); }
+    .circle-bsnl { background: var(--bsnl-blue); font-size: 9px; }
+    .op-card span { font-size: 11px; font-weight: 700; color: var(--text-dark); }
+
+    .btn-proceed {
+        width: 100%;
+        background: var(--purple-theme);
+        color: #fff;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 20px;
+        box-shadow: 0 4px 12px rgba(95, 37, 159, 0.3);
+    }
+    .btn-proceed:disabled { background: #b8b8b8; box-shadow: none; cursor: not-allowed; }
+
+    /* --- PLANS SCREEN (Matching Screenshot 160002) --- */
+    .plans-subbar {
+        background: #fff;
+        padding: 12px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .plans-subbar-left h3 { font-size: 15px; font-weight: 700; color: var(--text-dark); }
+    .plans-subbar-left p { font-size: 12px; color: var(--text-muted); }
+    .special-badge {
+        background: var(--purple-theme);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 5px 12px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .plans-scroll-container {
+        padding: 14px;
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    .plan-card {
+        background: #fff;
+        border-radius: 16px;
+        margin-bottom: 16px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        border: 1px solid #e0e2e9;
+        overflow: hidden;
+    }
+    .plan-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 14px 4px;
+    }
+    .badge-new {
+        background: var(--purple-theme);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 4px 8px;
+        border-radius: 4px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .op-plan-label { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+
+    .price-container {
+        padding: 4px 14px 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .price-value { font-size: 32px; font-weight: 900; color: var(--text-dark); }
+    .price-strike { font-size: 14px; color: #999; text-decoration: line-through; margin-left: 6px; font-weight: 500; }
+    .speed-5g-text { font-size: 11px; font-weight: 900; color: var(--danger); text-align: right; line-height: 1.2; }
+
+    .plan-specs-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        padding: 12px 14px;
+        border-top: 1px solid #f0f0f0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .spec-item { text-align: center; }
+    .spec-icon {
+        width: 32px;
+        height: 32px;
+        margin: 0 auto 4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .spec-icon svg { width: 22px; height: 22px; }
+    .spec-lbl { font-size: 10px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 2px; }
+    .spec-val { font-size: 12px; font-weight: 700; color: var(--text-dark); }
+
+    .plan-action-box {
+        padding: 12px 14px;
+    }
+    .btn-recharge-action {
+        width: 100%;
+        background: var(--purple-theme);
+        color: #fff;
+        padding: 13px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    /* --- PLAN DETAILS MODAL (Screenshot 154605) --- */
+    .details-sheet {
+        background: #fff;
+        width: 100%;
+        max-width: 480px;
+        border-radius: 20px 20px 0 0;
+        padding: 20px;
+        max-height: 85vh;
+        overflow-y: auto;
+        animation: slideUp 0.3s ease-out;
+    }
+    @keyframes slideUp {
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
+    }
+    .sheet-close-row { display: flex; justify-content: flex-end; margin-bottom: 10px; }
+    .sheet-close-row svg { width: 22px; height: 22px; fill: #444; cursor: pointer; }
+    .detail-price-main { font-size: 38px; font-weight: 900; color: var(--text-dark); margin-bottom: 15px; }
+    .offer-bubble { display: inline-block; background: #fff1e0; color: #c45500; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 4px; margin-bottom: 15px; }
+    
+    .apps-title { font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 12px; }
+    .subs-row { display: flex; gap: 20px; margin-bottom: 20px; }
+    .sub-icon-item { text-align: center; width: 65px; }
+    .sub-circle { width: 44px; height: 44px; border-radius: 50%; background: #eee; display: flex; justify-content: center; align-items: center; margin: 0 auto 5px; }
+    .sub-name { font-size: 10px; font-weight: 600; color: #555; }
+
+    .detail-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    .detail-table td { padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+    .detail-table td:first-child { color: var(--text-muted); }
+    .detail-table td:last-child { text-align: right; font-weight: 700; color: var(--text-dark); }
+
+    .notes-box { background: #fafafa; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+    .notes-box h4 { font-size: 13px; margin-bottom: 8px; color: #333; }
+    .notes-box p, .notes-box li { font-size: 11px; color: #666; line-height: 1.5; margin-bottom: 6px; }
+
+    .btn-pay-details {
+        width: 100%;
+        background: var(--jio-blue);
+        color: #fff;
+        padding: 15px;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+    }
+
+    /* --- PAYMENT METHOD SCREEN (Screenshot 154617) --- */
+    .pay-header-banner { background: var(--pay-header); color: #fff; padding: 16px 18px 24px; }
+    .pay-header-nav { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .pay-header-nav svg { width: 22px; height: 22px; fill: #fff; cursor: pointer; }
+    .pay-header-nav h2 { font-size: 18px; font-weight: 600; }
+    .payable-amount-box { font-size: 15px; font-weight: 500; }
+    .payable-amount-box strong { font-size: 24px; font-weight: 800; }
+
+    .pay-methods-body {
+        background: #fff;
+        border-radius: 20px 20px 0 0;
+        margin-top: -12px;
+        padding: 20px 16px;
+        flex: 1;
+        overflow-y: auto;
+    }
+    .checkout-title { font-size: 13px; font-weight: 600; color: #555; margin-bottom: 15px; }
+    .pay-method-card {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 14px;
+        border: 1.5px solid var(--border-color);
+        border-radius: 12px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .pay-method-card.selected { border-color: var(--jio-blue); background: #f8faff; }
+    .pay-app-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; justify-content: center; align-items: center; }
+    .pay-app-icon svg, .pay-app-icon img { width: 34px; height: 34px; object-fit: contain; }
+    .pay-app-info { flex: 1; }
+    .pay-app-name { font-size: 15px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px; }
+    .pay-app-sub { font-size: 11px; color: var(--success); font-weight: 600; line-height: 1.3; }
+    .pay-check-circle {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #ccc;
+        border-radius: 50%;
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .pay-method-card.selected .pay-check-circle { border-color: var(--jio-blue); }
+    .pay-method-card.selected .pay-check-circle::after { content: ''; width: 10px; height: 10px; background: var(--jio-blue); border-radius: 50%; }
+
+    .bottom-pay-trigger {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        padding: 14px 18px;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+    }
+    .btn-checkout-now {
+        width: 100%;
+        background: var(--jio-blue);
+        color: #fff;
+        padding: 16px;
+        border-radius: 25px;
+        font-size: 17px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+    }
+    .onepay-tag { text-align: center; font-size: 11px; color: #888; margin-top: 8px; font-weight: 600; }
+    .onepay-tag strong { color: var(--jio-blue); }
+
+    /* --- PROCESSING SCREEN (Screenshot 154638) --- */
+    #screen-processing {
+        background: #fff;
+        padding: 30px 20px;
+        align-items: center;
+        justify-content: space-between;
+        text-align: center;
+    }
+    .proc-header { align-self: flex-start; text-align: left; }
+    .proc-header h2 { font-size: 18px; font-weight: 700; color: var(--text-dark); }
+    .proc-header p { font-size: 15px; font-weight: 600; color: var(--text-dark); }
+
+    .processing-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: -60px;
+    }
+    .proc-spinner {
+        width: 90px;
+        height: 90px;
+        border: 6px solid #e2e8f0;
+        border-top: 6px solid #0f3cc9;
+        border-radius: 50%;
+        animation: rotateSpinner 1s linear infinite;
+        margin-bottom: 30px;
+    }
+    @keyframes rotateSpinner { to { transform: rotate(360deg); } }
+    .proc-title { font-size: 22px; font-weight: 900; color: var(--text-dark); margin-bottom: 12px; }
+    .proc-sub { font-size: 14px; color: #555; font-weight: 500; line-height: 1.4; max-width: 280px; }
+
+    .proc-footer-note { font-size: 11px; color: #777; font-weight: 600; max-width: 320px; }
+
+    /* Modal Overlay */
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.65);
+        z-index: 1000;
+        display: none;
+        justify-content: center;
+        align-items: flex-end;
+    }
+    .modal-overlay.active { display: flex; }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+    <!-- SCREEN 1: JIO 10 SPLASH SCREEN -->
+    <div id="screen-splash" class="app-screen active">
+        <div class="splash-container">
+            <div class="dots-grid">
+                <div class="dot dot-red"></div><div class="dot dot-blue"></div><div class="dot dot-gold"></div><div class="dot dot-blue"></div>
+                <div class="dot dot-gold"></div><div class="dot dot-blue"></div><div class="dot dot-red"></div><div class="dot dot-gold"></div>
+                <div class="dot dot-blue"></div><div class="dot dot-red"></div><div class="dot dot-gold"></div><div class="dot dot-blue"></div>
+                <div class="dot dot-red"></div><div class="dot dot-blue"></div><div class="dot dot-gold"></div><div class="dot dot-red"></div>
+            </div>
+            <div class="jio-10-logo">
+                <div class="jio-1">1</div>
+                <div class="jio-circle">Jio</div>
+            </div>
+            <div class="dots-grid">
+                <div class="dot dot-gold"></div><div class="dot dot-blue"></div><div class="dot dot-red"></div><div class="dot dot-blue"></div>
+                <div class="dot dot-red"></div><div class="dot dot-blue"></div><div class="dot dot-gold"></div><div class="dot dot-red"></div>
+                <div class="dot dot-blue"></div><div class="dot dot-red"></div><div class="dot dot-gold"></div><div class="dot dot-blue"></div>
+                <div class="dot dot-gold"></div><div class="dot dot-blue"></div><div class="dot dot-red"></div><div class="dot dot-gold"></div>
+            </div>
+        </div>
+        <div class="splash-footer">CELEBRATING 10 YEARS OF DIGITAL REVOLUTION</div>
+    </div>
+
+    <!-- SCREEN 2: DASHBOARD SCREEN -->
+    <div id="screen-dashboard" class="app-screen">
+        <header class="top-header">
+            <div class="header-left">
+                <div class="header-title">
+                    <h1>Mobile Recharge</h1>
+                    <p>Fast • Secure • Simple</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+            </div>
+        </header>
+
+        <!-- DIWALI BANNER -->
+        <div class="diwali-banner">
+            <div class="savings-ribbon">Safe & Trusted Platform</div>
+            <div class="dhamaka-title">DIWALI DHAMAKA OFFER</div>
+            <div class="banner-subtitle">THIS PLATFORM IS 100% ORIGINAL • RECHARGE WITHOUT ANY WORRIES</div>
+            
+            <div class="trust-badges-row">
+                <div class="trust-badge-col">
+                    <div class="trust-icon-wrap"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg></div>
+                    <span>100% ORIGINAL</span>
+                </div>
+                <div class="trust-badge-col">
+                    <div class="trust-icon-wrap"><svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14zm-1-6h-3V8h-2v5H8l4 4 4-4z"/></svg></div>
+                    <span>INSTANT RECHARGE</span>
+                </div>
+                <div class="trust-badge-col">
+                    <div class="trust-icon-wrap"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
+                    <span>SECURE & SAFE</span>
+                </div>
+                <div class="trust-badge-col">
+                    <div class="trust-icon-wrap"><svg viewBox="0 0 24 24"><path d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg></div>
+                    <span>24x7 SUPPORT</span>
+                </div>
+                <div class="trust-badge-col">
+                    <div class="trust-icon-wrap"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div>
+                    <span>NO HIDDEN CHARGES</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="field-label">Enter Mobile Number (10 Digit Mandatory)</div>
+            <div class="mobile-box">
+                <span>+91</span>
+                <input type="tel" id="mobile-input" placeholder="Enter Mobile Number" maxlength="10" oninput="handleMobileInput()">
+            </div>
+            <p id="mobile-err" class="input-hint">Please enter valid 10-digit number</p>
+
+            <div class="op-selection-title">Select Operator</div>
+            <div class="operator-grid">
+                <div class="op-card disabled" id="op-jio" onclick="selectOperator('Jio', this)">
+                    <div class="op-circle circle-jio">Jio</div>
+                    <span>Jio</span>
+                </div>
+                <div class="op-card disabled" id="op-airtel" onclick="selectOperator('Airtel', this)">
+                    <div class="op-circle circle-airtel">Airtel</div>
+                    <span>Airtel</span>
+                </div>
+                <div class="op-card disabled" id="op-vi" onclick="selectOperator('Vi', this)">
+                    <div class="op-circle circle-vi">Vi</div>
+                    <span>Vi</span>
+                </div>
+                <div class="op-card disabled" id="op-bsnl" onclick="selectOperator('BSNL', this)">
+                    <div class="op-circle circle-bsnl">BSNL</div>
+                    <span>BSNL</span>
+                </div>
+            </div>
+
+            <button id="btn-show-plans" class="btn-proceed" disabled onclick="renderAndGoToPlans()">
+                View Special Plans &rarr;
+            </button>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: PLANS LIST SCREEN -->
+    <div id="screen-plans" class="app-screen">
+        <header class="top-header">
+            <div class="header-left">
+                <div class="header-icon" onclick="switchScreen('screen-dashboard')">
+                    <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                </div>
+                <div class="header-title">
+                    <h1 id="plans-header-title">Recharge Plans</h1>
+                    <p id="plans-header-sub">Fast • Secure • Simple</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="plans-subbar">
+            <div class="plans-subbar-left">
+                <h3>Best plans for you</h3>
+                <p>Select a plan to continue</p>
+            </div>
+            <div class="special-badge">&#10022; SPECIAL</div>
+        </div>
+
+        <div class="plans-scroll-container" id="plans-list-container">
+            <!-- DYNAMIC PLANS GENERATED BASED ON OPERATOR -->
+        </div>
+    </div>
+
+    <!-- SCREEN 4: PAYMENT OPTIONS SCREEN -->
+    <div id="screen-payment" class="app-screen">
+        <div class="pay-header-banner">
+            <div class="pay-header-nav">
+                <svg onclick="switchScreen('screen-plans')" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg>
+                <h2>Payment</h2>
+            </div>
+            <div class="payable-amount-box">Amount payable: <strong>₹<span id="final-payable-text">0</span></strong></div>
+        </div>
+
+        <div class="pay-methods-body">
+            <div class="checkout-title">Pay using quick checkout</div>
+
+            <!-- Paytm -->
+            <div class="pay-method-card selected" onclick="togglePayMethod(this, 'paytm')">
+                <div class="pay-app-icon" style="background:#00baf2;"><span style="color:#fff; font-size:9px; font-weight:900;">paytm</span></div>
+                <div class="pay-app-info">
+                    <div class="pay-app-name">Paytm</div>
+                    <div class="pay-app-sub">Assured ₹10-₹400 cashback on First mandate creation. T&C Apply</div>
+                </div>
+                <div class="pay-check-circle"></div>
+            </div>
+
+            <!-- GPay -->
+            <div class="pay-method-card" onclick="togglePayMethod(this, 'gpay')">
+                <div class="pay-app-icon" style="background:#f0f0f0;"><span style="color:#4285f4; font-size:11px; font-weight:900;">GPay</span></div>
+                <div class="pay-app-info">
+                    <div class="pay-app-name">GPay</div>
+                </div>
+                <div class="pay-check-circle"></div>
+            </div>
+
+            <!-- PhonePe -->
+            <div class="pay-method-card" onclick="togglePayMethod(this, 'phonepe')">
+                <div class="pay-app-icon" style="background:var(--purple-theme);"><span style="color:#fff; font-size:13px; font-weight:900;">पे</span></div>
+                <div class="pay-app-info">
+                    <div class="pay-app-name">PhonePe</div>
+                    <div class="pay-app-sub">Fast UPI payments via PhonePe App</div>
+                </div>
+                <div class="pay-check-circle"></div>
+            </div>
+
+            <!-- BHIM -->
+            <div class="pay-method-card" onclick="togglePayMethod(this, 'bhim')">
+                <div class="pay-app-icon" style="background:#004c97;"><span style="color:#ffcc00; font-size:10px; font-weight:900;">BHIM</span></div>
+                <div class="pay-app-info">
+                    <div class="pay-app-name">BHIM UPI</div>
+                    <div class="pay-app-sub">Get Flat ₹10 Cashback on First Mandate Creation</div>
+                </div>
+                <div class="pay-check-circle"></div>
+            </div>
+
+            <div style="height: 100px;"></div>
+        </div>
+
+        <div class="bottom-pay-trigger">
+            <button class="btn-checkout-now" onclick="triggerUPIPayment()">Pay ₹<span id="btn-checkout-amount">0</span></button>
+            <div class="onepay-tag">Powered by <strong>JioOnePay</strong></div>
+        </div>
+    </div>
+
+    <!-- SCREEN 5: PROCESSING LOADER SCREEN -->
+    <div id="screen-processing" class="app-screen">
+        <div class="proc-header">
+            <h2>Payment</h2>
+            <p>Amount payable: ₹<span id="proc-amount-val">0</span></p>
+        </div>
+
+        <div class="processing-center">
+            <div class="proc-spinner"></div>
+            <div class="proc-title">Your payment is being processed.</div>
+            <div class="proc-sub">Please hold on as it may take upto 30 mins in some cases.</div>
+        </div>
+
+        <div class="proc-footer-note">
+            Note: Do not hit back button or close this screen until the transaction is complete
+        </div>
+    </div>
+
+</div>
+
+<!-- DETAILS BOTTOM SHEET MODAL -->
+<div id="modal-details" class="modal-overlay">
+    <div class="details-sheet">
+        <div class="sheet-close-row">
+            <svg onclick="closeDetailsModal()" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </div>
+
+        <div class="detail-price-main">₹<span id="det-price">0</span></div>
+        <div class="offer-bubble" id="det-offer-bubble">SPECIAL DIWALI OFFER INCLUDED</div>
+
+        <div class="apps-title">Apps & Subscriptions Included</div>
+        <div class="subs-row" id="det-subs-row">
+            <!-- Injected by JS -->
+        </div>
+
+        <div class="apps-title">Plan Details</div>
+        <table class="detail-table">
+            <tr><td>Pack validity</td><td id="det-val-days">365 Days</td></tr>
+            <tr><td>Total data</td><td id="det-total-data">1095 GB</td></tr>
+            <tr><td>Data at high speed</td><td id="det-speed-data">3 GB/day</td></tr>
+            <tr><td>Voice</td><td id="det-voice">Unlimited</td></tr>
+            <tr><td>SMS</td><td id="det-sms">100 SMS/day</td></tr>
+        </table>
+
+        <div class="notes-box">
+            <h4>Notes & Benefits</h4>
+            <div id="det-notes-content"></div>
+        </div>
+
+        <button class="btn-pay-details" onclick="openPaymentFromDetails()">Pay ₹<span id="det-btn-amt">0.00</span></button>
+    </div>
+</div>
+
+<script>
+    const UPI_ID = "paramjeet201@fam";
+    let currentMobile = "";
+    let currentOperator = "Jio";
+    let selectedPlanData = null;
+
+    // --- OPERATOR PLANS DATABASE ---
+    const OPERATOR_PLANS = {
+        Jio: [
+            {
+                price: 499, strike: 3999, tag: "Jio PLAN", validity: "365 Days", data: "3GB/day", totalData: "1095 GB", voice: "Unlimited", sms: "100/day",
+                title: "MEGA ANNIVERSARY OFFER", speed5g: "UNLIMITED TRUE 5G DATA",
+                apps: [ {name: "JioHotstar", icon: "🎬"}, {name: "JioTV", icon: "📺"}, {name: "JioAICloud", icon: "☁️"} ],
+                notes: [
+                    "1. Jio Special Offer benefits: JioHotstar Mobile subscription & JioAICloud Free 50 GB storage.",
+                    "2. Free 18-month Pro Plan of Google Gemini worth ₹35,100, with 5000 GB cloud storage, Nano Banana and more.",
+                    "3. 365 Days Amazon Prime Lite subscription included.",
+                    "*Unlimited 5G data for eligible subscribers."
+                ]
+            },
+            {
+                price: 449, strike: 2495, tag: "Jio PLAN", validity: "365 Days", data: "2.5GB/day", totalData: "912.5 GB", voice: "Unlimited", sms: "100/day",
+                title: "UNLIMITED TRUE 5G OFFER", speed5g: "UNLIMITED TRUE 5G DATA",
+                apps: [ {name: "JioTV", icon: "📺"}, {name: "JioCinema", icon: "🍿"}, {name: "JioCloud", icon: "☁️"} ],
+                notes: [
+                    "1. Jio Anniversary benefits with 1000+ TV channels via JioTV.",
+                    "2. Data Booster: 120 GB extra data allowance.",
+                    "3. Partner Vouchers: EaseMyTrip up to ₹2,200 off, AJIO ₹200 off."
+                ]
+            },
+            {
+                price: 299, strike: 1499, tag: "Jio PLAN", validity: "84 Days", data: "2GB/day", totalData: "168 GB", voice: "Unlimited", sms: "100/day",
+                title: "TOP TRENDING OFFER", speed5g: "UNLIMITED TRUE 5G DATA",
+                apps: [ {name: "Amazon Prime", icon: "📦"}, {name: "JioTV", icon: "📺"}, {name: "JioCloud", icon: "☁️"} ],
+                notes: [
+                    "1. Free 84 Days Amazon Prime Lite subscription.",
+                    "2. Unlimited 5G High Speed Data with no daily capping.",
+                    "3. Post quota unlimited @ 64 Kbps."
+                ]
+            }
+        ],
+        Airtel: [
+            {
+                price: 499, strike: 3799, tag: "Airtel PLAN", validity: "365 Days", data: "3GB/day", totalData: "1095 GB", voice: "Unlimited", sms: "100/day",
+                title: "AIRTEL DHAMAKA ANNUAL", speed5g: "UNLIMITED 5G DATA",
+                apps: [ {name: "Disney+ Hotstar", icon: "⭐"}, {name: "Xstream Play", icon: "📱"}, {name: "Wynk Music", icon: "🎵"} ],
+                notes: [
+                    "1. 1 Year Disney+ Hotstar Mobile subscription included.",
+                    "2. Airtel Xstream Play with access to 20+ OTT apps.",
+                    "3. Unlimited 5G Data included for 5G phone users."
+                ]
+            },
+            {
+                price: 449, strike: 2399, tag: "Airtel PLAN", validity: "365 Days", data: "2.5GB/day", totalData: "912.5 GB", voice: "Unlimited", sms: "100/day",
+                title: "UNLIMITED ENTERTAINMENT", speed5g: "UNLIMITED 5G DATA",
+                apps: [ {name: "Xstream", icon: "📱"}, {name: "Apollo 24|7", icon: "💊"}, {name: "Wynk", icon: "🎵"} ],
+                notes: [
+                    "1. Unlimited Voice calls across all networks in India.",
+                    "2. Apollo 24|7 Circle membership at no extra cost for 12 months."
+                ]
+            },
+            {
+                price: 299, strike: 1399, tag: "Airtel PLAN", validity: "84 Days", data: "2GB/day", totalData: "168 GB", voice: "Unlimited", sms: "100/day",
+                title: "BEST SELLER PACK", speed5g: "UNLIMITED 5G DATA",
+                apps: [ {name: "RewardsMini", icon: "🎁"}, {name: "Wynk Music", icon: "🎵"} ],
+                notes: [
+                    "1. Unlimited True 5G data over and above plan quota.",
+                    "2. Free Hellotunes set any song for free."
+                ]
+            }
+        ],
+        Vi: [
+            {
+                price: 499, strike: 3699, tag: "Vi PLAN", validity: "365 Days", data: "3GB/day", totalData: "1095 GB", voice: "Unlimited", sms: "100/day",
+                title: "VI HERO ANNUAL OFFER", speed5g: "BINGE ALL NIGHT",
+                apps: [ {name: "Disney+ Hotstar", icon: "⭐"}, {name: "Vi Movies&TV", icon: "🎬"} ],
+                notes: [
+                    "1. Binge All Night: Surf & stream from 12 AM to 6 AM with zero data deduction.",
+                    "2. Weekend Data Rollover: Carry forward unused weekday data to the weekend.",
+                    "3. 1 Year Disney+ Hotstar Mobile Subscription."
+                ]
+            },
+            {
+                price: 449, strike: 2299, tag: "Vi PLAN", validity: "365 Days", data: "2.5GB/day", totalData: "912.5 GB", voice: "Unlimited", sms: "100/day",
+                title: "SUPER SAVER 365 DAYS", speed5g: "BINGE ALL NIGHT",
+                apps: [ {name: "SonyLIV", icon: "📺"}, {name: "Vi MTV", icon: "🎬"} ],
+                notes: [
+                    "1. Data Delight: Up to 2GB backup data every month.",
+                    "2. Free SonyLIV mobile edition for full validity."
+                ]
+            },
+            {
+                price: 299, strike: 1299, tag: "Vi PLAN", validity: "84 Days", data: "2GB/day", totalData: "168 GB", voice: "Unlimited", sms: "100/day",
+                title: "HERO UNLIMITED 84D", speed5g: "WEEKEND ROLLOVER",
+                apps: [ {name: "Vi Movies&TV", icon: "🎬"} ],
+                notes: [
+                    "1. Unlimited calling + 100 SMS/day.",
+                    "2. Night data without limits from 12 midnight to 6 AM."
+                ]
+            }
+        ],
+        BSNL: [
+            {
+                price: 499, strike: 2999, tag: "BSNL PLAN", validity: "365 Days", data: "3GB/day", totalData: "1095 GB", voice: "Unlimited", sms: "100/day",
+                title: "BSNL SWADESHI ANNUAL", speed5g: "HIGH SPEED 4G/5G",
+                apps: [ {name: "BiTV", icon: "📡"}, {name: "Hardy Games", icon: "🎮"} ],
+                notes: [
+                    "1. Truly unlimited local & STD calls to any network in home & national roaming.",
+                    "2. Free BSNL Tunes subscription with unlimited song change."
+                ]
+            },
+            {
+                price: 449, strike: 1999, tag: "BSNL PLAN", validity: "365 Days", data: "2.5GB/day", totalData: "912.5 GB", voice: "Unlimited", sms: "100/day",
+                title: "BHARAT CONNECT 365", speed5g: "HIGH SPEED 4G/5G",
+                apps: [ {name: "Eros Now", icon: "🎬"}, {name: "Lystn Podcast", icon: "🎧"} ],
+                notes: [
+                    "1. National Roaming including MTNL areas of Delhi and Mumbai.",
+                    "2. Free Eros Now entertainment subscription."
+                ]
+            },
+            {
+                price: 299, strike: 999, tag: "BSNL PLAN", validity: "84 Days", data: "2GB/day", totalData: "168 GB", voice: "Unlimited", sms: "100/day",
+                title: "BSNL VALUE PACK", speed5g: "HIGH SPEED 4G/5G",
+                apps: [ {name: "BSNL Tunes", icon: "🎵"} ],
+                notes: [
+                    "1. 2GB high speed data per day, post limit speed 40kbps.",
+                    "2. Standard 100 SMS per day to any network."
+                ]
+            }
+        ]
+    };
+
+    // --- ANIMATION / TRANSITION SYSTEM ---
+    // Safe transition so it NEVER gets stuck
+    function initSplash() {
+        const splash = document.getElementById('screen-splash');
+        setTimeout(() => {
+            splash.style.transition = 'opacity 0.4s ease';
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                switchScreen('screen-dashboard');
+            }, 400);
+        }, 1600);
+    }
+    
+    // Fallback trigger in case load event delays
+    if (document.readyState === 'complete') {
+        initSplash();
+    } else {
+        window.addEventListener('load', initSplash);
+        setTimeout(initSplash, 2000); // hard guarantee
+    }
+
+    function switchScreen(screenId) {
+        document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+        const target = document.getElementById(screenId);
+        target.classList.add('active');
+        target.scrollTop = 0;
+    }
+
+    // --- DASHBOARD VALIDATION ---
+    function handleMobileInput() {
+        const inp = document.getElementById('mobile-input');
+        const err = document.getElementById('mobile-err');
+        const opCards = document.querySelectorAll('.op-card');
+        const btn = document.getElementById('btn-show-plans');
+
+        inp.value = inp.value.replace(/[^0-9]/g, '');
+        currentMobile = inp.value;
+
+        if (currentMobile.length === 10) {
+            err.style.display = 'none';
+            opCards.forEach(c => c.classList.remove('disabled'));
+            btn.disabled = false;
+        } else {
+            opCards.forEach(c => c.classList.add('disabled'));
+            btn.disabled = true;
+            if (currentMobile.length > 0) {
+                err.style.display = 'block';
+            } else {
+                err.style.display = 'none';
+            }
+        }
+    }
+
+    function selectOperator(name, el) {
+        document.querySelectorAll('.op-card').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        currentOperator = name;
+    }
+
+    function renderAndGoToPlans() {
+        if (currentMobile.length !== 10) return;
+        
+        // Auto select Jio if none clicked
+        if (!document.querySelector('.op-card.active')) {
+            const jioCard = document.getElementById('op-jio');
+            if (jioCard) jioCard.classList.add('active');
+            currentOperator = "Jio";
+        }
+
+        document.getElementById('plans-header-title').innerText = `Recharge ${currentMobile}`;
+        document.getElementById('plans-header-sub').innerText = `${currentOperator} Prepaid`;
+
+        const container = document.getElementById('plans-list-container');
+        container.innerHTML = "";
+
+        const plans = OPERATOR_PLANS[currentOperator] || OPERATOR_PLANS.Jio;
+
+        plans.forEach((p, idx) => {
+            const card = document.createElement('div');
+            card.className = 'plan-card';
+            card.innerHTML = `
+                <div class="plan-card-top">
+                    <span class="badge-new">&#10022; NEW</span>
+                    <span class="op-plan-label">${p.tag}</span>
+                </div>
+                <div class="price-container">
+                    <div>
+                        <span class="price-value">₹${p.price}</span>
+                        <span class="price-strike">₹${p.strike}</span>
+                    </div>
+                    <div class="speed-5g-text">${p.speed5g.replace(' ', '<br>')}</div>
+                </div>
+                <div class="plan-specs-row">
+                    <div class="spec-item">
+                        <div class="spec-icon">
+                            <svg viewBox="0 0 24 24"><path fill="#d93025" d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+                        </div>
+                        <div class="spec-lbl">Validity</div>
+                        <div class="spec-val">${p.validity}</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-icon">
+                            <svg viewBox="0 0 24 24"><path fill="#f29900" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        </div>
+                        <div class="spec-lbl">Data</div>
+                        <div class="spec-val">${p.data}</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-icon">
+                            <svg viewBox="0 0 24 24"><path fill="#118a27" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                        </div>
+                        <div class="spec-lbl">Voice</div>
+                        <div class="spec-val">${p.voice}</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-icon">
+                            <svg viewBox="0 0 24 24"><path fill="#555" d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 11H7V9h2v2zm4 0h-2V9h2v2zm4 0h-2V9h2v2z"/></svg>
+                        </div>
+                        <div class="spec-lbl">SMS</div>
+                        <div class="spec-val">${p.sms}</div>
+                    </div>
+                </div>
+                <div class="plan-action-box">
+                    <button class="btn-recharge-action" onclick="openPlanDetailsModal(${idx})">
+                        Recharge for ₹${p.price} &rarr;
+                    </button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        switchScreen('screen-plans');
+    }
+
+    // --- PLAN DETAILS SHEET ---
+    function openPlanDetailsModal(planIndex) {
+        const plans = OPERATOR_PLANS[currentOperator] || OPERATOR_PLANS.Jio;
+        selectedPlanData = plans[planIndex];
+
+        document.getElementById('det-price').innerText = selectedPlanData.price;
+        document.getElementById('det-btn-amt').innerText = selectedPlanData.price + ".00";
+        document.getElementById('det-offer-bubble').innerText = selectedPlanData.title;
+
+        document.getElementById('det-val-days').innerText = selectedPlanData.validity;
+        document.getElementById('det-total-data').innerText = selectedPlanData.totalData;
+        document.getElementById('det-speed-data').innerText = selectedPlanData.data;
+        document.getElementById('det-voice').innerText = selectedPlanData.voice;
+        document.getElementById('det-sms').innerText = selectedPlanData.sms;
+
+        // Render Subs
+        const subsRow = document.getElementById('det-subs-row');
+        subsRow.innerHTML = "";
+        selectedPlanData.apps.forEach(app => {
+            const el = document.createElement('div');
+            el.className = 'sub-icon-item';
+            el.innerHTML = `
+                <div class="sub-circle">${app.icon}</div>
+                <div class="sub-name">${app.name}</div>
+            `;
+            subsRow.appendChild(el);
+        });
+
+        // Render Notes
+        const notesDiv = document.getElementById('det-notes-content');
+        notesDiv.innerHTML = "";
+        selectedPlanData.notes.forEach(note => {
+            const p = document.createElement('p');
+            p.innerText = note;
+            notesDiv.appendChild(p);
+        });
+
+        document.getElementById('modal-details').classList.add('active');
+    }
+
+    function closeDetailsModal() {
+        document.getElementById('modal-details').classList.remove('active');
+    }
+
+    function openPaymentFromDetails() {
+        closeDetailsModal();
+        
+        document.getElementById('final-payable-text').innerText = selectedPlanData.price;
+        document.getElementById('btn-checkout-amount').innerText = selectedPlanData.price;
+        document.getElementById('proc-amount-val').innerText = selectedPlanData.price;
+
+        switchScreen('screen-payment');
+    }
+
+    // --- PAYMENT METHOD SELECTION & REDIRECTION ---
+    function togglePayMethod(element, method) {
+        document.querySelectorAll('.pay-method-card').forEach(c => c.classList.remove('selected'));
+        element.classList.add('selected');
+    }
+
+    function triggerUPIPayment() {
+        if (!selectedPlanData) return;
+
+        // Switch to native processing screen
+        switchScreen('screen-processing');
+
+        // Direct deep link with amount auto-filled
+        setTimeout(() => {
+            const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(currentOperator + " Recharge")}&am=${selectedPlanData.price}&cu=INR`;
+            window.location.href = upiLink;
+        }, 2200);
+    }
+</script>
+
+</body>
+</html>
